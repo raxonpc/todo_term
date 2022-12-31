@@ -5,15 +5,24 @@
 
 using DateType = std::chrono::year_month_day;
   
-struct Task {
-    Task() = default;
+class Task {
+public:
+    Task(const std::string&, const DateType&);
+    Task(const std::string&);
 
-    std::string m_title{};
-    std::optional<DateType> m_deadline{};
-    bool m_is_done{ false };
+    ~Task();
+
+    std::string get_title() const;
+    std::optional<DateType> get_deadline() const;
+    bool get_done() const;
+private:
+    struct Implementation;
+    Implementation* m_impl;
 };
 
 class TaskDB {
+private:
+    static int m_id_count;
 public:
     // path to sqlite file
     TaskDB(const std::string&);
