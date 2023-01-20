@@ -7,6 +7,7 @@ WORK IN PROGRESS!
 ## dependencies
 
 -   sqlite3
+-   fmtlib
 -   ftxui
 
 ## licensing
