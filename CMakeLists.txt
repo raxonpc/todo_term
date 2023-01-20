@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.10)
-project(todo)
+project(todo_term)
 
 set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
@@ -7,7 +7,7 @@ set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 set(TODO_SRC
     db.cpp
 )
-add_library(todo_lib ${TODO_SRC})
+add_library(todo_lib STATIC ${TODO_SRC})
 
 find_package(fmt)
 target_link_libraries(todo_lib sqlite3 fmt::fmt)
