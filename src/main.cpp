@@ -1,5 +1,4 @@
-#include "db.hpp"
-#include "tui.hpp"
+#include "App.hpp"
 
 int main(int argc, char *argv[]) {
   Application app("tasks.db");

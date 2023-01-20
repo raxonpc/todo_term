@@ -22,7 +22,7 @@ FetchContent_MakeAvailable(ftxui)
 set(TODO_SRC
     src/db.cpp
     src/main.cpp
-    src/tui.cpp
+    src/App.cpp
 )
 add_executable(todo ${TODO_SRC})
 
