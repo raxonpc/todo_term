@@ -12,5 +12,15 @@ add_library(todo_lib ${TODO_SRC})
 find_package(fmt)
 target_link_libraries(todo_lib sqlite3 fmt::fmt)
 
-add_executable(todo main.cpp)
-target_link_libraries(todo todo_lib)
+# FTXUI
+include(FetchContent)
+FetchContent_Declare(
+    ftxui
+    GIT_REPOSITORY https://github.com/ArthurSonzogni/ftxui
+    GIT_TAG v3.0.0
+)
+FetchContent_MakeAvailable(ftxui)
+
+
+add_executable(todo main.cpp tui.cpp)
+target_link_libraries(todo PRIVATE  todo_lib ftxui::screen ftxui::dom ftxui::component)

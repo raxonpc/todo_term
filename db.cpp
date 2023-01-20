@@ -3,6 +3,7 @@
 #include <string_view>
 #include <fmt/core.h>
 
+namespace todo_term {
 
 Task::Task(const std::string& title, bool done) 
 : m_title{ title }, m_deadline{ std::nullopt }, m_done{ done } {
@@ -37,11 +38,15 @@ void create_db(sqlite3* db) {
         "create table if not exists Task(id integer primary key, title text not null, deadline text, done integer);";
 
     char* error_msg = nullptr;
-    int create_status = sqlite3_exec(db, create_sql.data(), nullptr, 0, &error_msg);
+    int create_status = sqlite3_exec(db, create_sql.data(), nullptr, nullptr, &error_msg);
 
     if(create_status != SQLITE_OK) {
-        std::string error_str{ error_msg };
-        sqlite3_free(error_msg);
+        std::string error_str{ "Unknown internal error" };
+        if(error_msg) {
+            error_str =  error_msg;
+            sqlite3_free(error_msg);
+        }
+        
         throw std::runtime_error{ error_str };
     }
 }
@@ -80,16 +85,24 @@ std::string DateToString(const DateType& date) {
 void TaskDB::add_task(const Task& task) {
     std::string insert_sql{};
     if(task.get_deadline()) {
-        insert_sql = fmt::format("insert into task (title, deadline, done) values(\'{}\', \'{}\', FALSE);",
+        insert_sql = fmt::format("insert into Task (title, deadline, done) values (\'{}\', \'{}\', FALSE);",
                                     task.get_title(),
                                     DateToString(task.get_deadline().value()));
+    }
+    else {
+        insert_sql = fmt::format("insert into Task (title, done) values (\'{}\', FALSE);",
+                                    task.get_title());
     }
 
     char* error_msg = nullptr;
     int insert_status = sqlite3_exec(m_impl->m_db, insert_sql.c_str(), nullptr, nullptr, &error_msg);
     if(insert_status != SQLITE_OK) {
-        std::string error_str{ error_msg };
-        sqlite3_free(error_msg);
+        std::string error_str{ "Unknown internal error" };
+        if(error_msg) {
+            error_str =  error_msg;
+            sqlite3_free(error_msg);
+        }
+        
         throw std::runtime_error{ error_str };
     }
     sqlite3_free(error_msg);
@@ -124,4 +137,6 @@ std::vector<Task> TaskDB::get_tasks() const {
     sqlite3_finalize(stmt);
 
     return output;
+}
+
 }
