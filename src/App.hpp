@@ -15,5 +15,6 @@ private:
   ftxui::ScreenInteractive m_screen;
   int menu_selected{ 0 };
 
-  void draw_create_menu();
+  void create_menu();
+  void task_menu();
 };
