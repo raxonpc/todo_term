@@ -4,8 +4,8 @@
 #include <string>
 #include <vector>
 
-namespace todo_term {
 
+namespace todo_term {
 using DateType = std::chrono::year_month_day;
 
 class Task {
@@ -40,5 +40,6 @@ private:
 };
 
 std::string DateToString(const DateType &);
+DateType StringToDate(const std::string&);
 
-} // namespace todo_term
+}

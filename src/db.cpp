@@ -82,6 +82,15 @@ std::string DateToString(const DateType& date) {
                         day_month_str(static_cast<unsigned>(date.day())));
 }
 
+DateType StringToDate(const std::string& str) {
+    int y, m, d;
+    std::sscanf(str.data(), "%d-%d-%d", &y, &m, &d);
+    return DateType{    std::chrono::year{ y }, 
+                        std::chrono::month{ static_cast<unsigned>(m) }, 
+                        std::chrono::day{ static_cast<unsigned>(d)  }
+                    };
+}
+
 void TaskDB::add_task(const Task& task) {
     std::string insert_sql{};
     if(task.get_deadline()) {
@@ -108,15 +117,6 @@ void TaskDB::add_task(const Task& task) {
     sqlite3_free(error_msg);
 }
 
-DateType parse_date(const char* date_str) {
-    int y, m, d;
-    std::sscanf(date_str, "%d-%d-%d", &y, &m, &d);
-    return DateType{    std::chrono::year{ y }, 
-                        std::chrono::month{ static_cast<unsigned>(m) }, 
-                        std::chrono::day{ static_cast<unsigned>(d)  }
-                    };
-}
-
 std::vector<Task> TaskDB::get_tasks() const {
     std::vector<Task> output{};
 
@@ -129,7 +129,7 @@ std::vector<Task> TaskDB::get_tasks() const {
     while (sqlite3_step(stmt) == SQLITE_ROW) {
         output.emplace_back(
             reinterpret_cast<const char*>(sqlite3_column_text(stmt, 1)),
-            parse_date(reinterpret_cast<const char*>(sqlite3_column_text(stmt, 2))),
+            StringToDate(reinterpret_cast<const char*>(sqlite3_column_text(stmt, 2))),
             static_cast<bool>(sqlite3_column_int(stmt, 3))
         );
     }

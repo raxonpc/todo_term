@@ -13,4 +13,7 @@ public:
 private:
   std::unique_ptr<todo_term::TaskDB> m_db;
   ftxui::ScreenInteractive m_screen;
+  int menu_selected{ 0 };
+
+  void draw_create_menu();
 };
